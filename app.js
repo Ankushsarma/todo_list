@@ -23,8 +23,7 @@ const taskSchema = new mongoose.Schema({
         {
             text: String,
             completed: { type: Boolean, default: false },
-            date: { type: Date, default: Date.now },
-            dueDate: { type: Date } // User-defined due date
+            dueDate: { type: Date } 
         }
     ]
 });
@@ -175,6 +174,22 @@ app.get("/remove_task/:taskId", async (req, res) => {
         res.status(500).send("Error removing task");
     }
 });
+
+app.get("/history",async(req,res)=>{
+    const user = req.session.credentials;
+    if (!user) return res.redirect("/login");
+
+    try {
+        const userTasks = await Task.findOne({ userId: user.userId });
+        res.render("history", {
+            name: user.name,
+            tasks: userTasks ? userTasks.task : []
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error fetching tasks");
+    }
+})
 
 // Start server
 app.listen(3000, () => {

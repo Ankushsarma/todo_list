@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My To-Do List</title>
+</head>
+<body>
+  <h1>Welcome <%= name %> 👋</h1>
+  <a href="/logout">Logout</a> 
+  <a href="/">Home</a>
+
+  <!-- Pending Tasks -->
+  <h2>Pending Tasks ⏳</h2>
+  <ul>
+    <% tasks.forEach(function(task) { %>
+      <% if (!task.completed && task.dueDate && new Date(task.dueDate) > new Date()) { %>
+        <li>
+          <a href="/marks_as_done/<%= task._id %>">Mark as done</a>
+          <%= task.text %> | Time Left: 
+          <span class="time-left" data-duedate="<%= task.dueDate.toISOString() %>"></span>
+          
+        </li>
+      <% } %>
+    <% }) %>
+  </ul>
+
+  <!-- Late Tasks -->
+  <h2>Late Tasks ⏰</h2>
+  <ul>
+    <% tasks.forEach(function(task) { %>
+      <% if (!task.completed && task.dueDate && new Date(task.dueDate) <= new Date()) { %>
+        <li>
+          <%= task.text %> | Late by: 
+          <span class="late-time" data-duedate="<%= task.dueDate.toISOString() %>"></span>
+          |
+        </li>
+      <% } %>
+    <% }) %>
+  </ul>
+
+  <!-- Completed Tasks -->
+  <h2>Completed Tasks ✅</h2>
+  <ul>
+    <% tasks.forEach(function(task) { %>
+      <% if (task.completed) { %>
+        <li>
+          <%= task.text %> | Task completed
+          |
+        </li>
+      <% } %>
+    <% }) %>
+  </ul>
+
+  <script>
+    function updateTimeLeft() {
+      const pendingSpans = document.querySelectorAll('.time-left');
+      const lateSpans = document.querySelectorAll('.late-time');
+
+      // Update pending time left
+      pendingSpans.forEach(span => {
+        const dueDate = new Date(span.dataset.duedate);
+        const now = new Date();
+        const diff = dueDate - now;
+
+        if (diff <= 0) {
+          span.textContent = "Overdue!";
+          span.style.color = "red";
+        } else {
+          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+          span.textContent = `${hours}h ${minutes}m ${seconds}s`;
+          span.style.color = "green";
+        }
+      });
+
+      // Update late time
+      lateSpans.forEach(span => {
+        const dueDate = new Date(span.dataset.duedate);
+        const now = new Date();
+        const diff = now - dueDate; // How late
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        span.textContent = `${hours}h ${minutes}m ${seconds}s`;
+        span.style.color = "red";
+      });
+    }
+
+    setInterval(updateTimeLeft, 1000);
+    updateTimeLeft();
+  </script>
+</body>
+</html>

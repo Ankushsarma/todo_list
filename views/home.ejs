@@ -5,7 +5,8 @@
 </head>
 <body>
   <h1>Welcome <%= name %> 👋</h1>
-  <a href="/logout">Logout</a>
+  <a href="/logout">Logout</a> 
+  <a href="/history">history</a>
 
   <!-- Task Input Form -->
   <form action="/" method="POST">
@@ -16,22 +17,24 @@
 
   <!-- Show Tasks -->
   <h2>Your Tasks</h2>
-  <ul>
-    <% tasks.forEach(function(task) { %>
+<ul>
+  <% tasks.forEach(function(task) { %>
+    <% if (!task.completed) { %> <!-- Only show incomplete tasks -->
       <li>
         <a href="/marks_as_done/<%= task._id %>">mark as done</a>
         <%= task.text %>
-        <% if (task.completed) { %> ✅ <% } %>
         <% if (task.dueDate) { %> 
           | Due: <%= task.dueDate.toLocaleString() %> 
           | Time Left: <span class="time-left" data-duedate="<%= task.dueDate.toISOString() %>"></span>
         <% } %>
         | <a href="/remove_task/<%= task._id %>">Remove task</a>
       </li>
-    <% }) %>
-  </ul>
+    <% } %>
+  <% }) %>
+</ul>
 
-  <!-- Countdown Script -->
+
+ 
   <script>
   function updateTimeLeft() {
       const spans = document.querySelectorAll('.time-left');
