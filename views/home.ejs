@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My To-Do List</title>
+</head>
+<body>
+  <h1>Welcome <%= name %> 👋</h1>
+
+  <!-- Task Input Form -->
+  <form action="/" method="POST">
+    <input type="text" name="task" placeholder="Enter new task" required>
+    <button type="submit">Add Task</button>
+  </form>
+
+  <!-- Show All Tasks -->
+  <h2>Your Tasks</h2>
+<ul>
+  <% tasks.forEach(function(task) { %>
+    <li>
+      <a href="/marks_as_done/<%= task._id %>">mark as done</a>
+      <%= task.text %> 
+      <% if (task.completed) { %>
+        ✅
+      <% } %>
+      | <a href="/remove_task/<%= task._id %>">Remove task</a>
+    </li>
+  <% }) %>
+</ul>
+
+</body>
+</html>
