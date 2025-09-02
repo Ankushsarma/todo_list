@@ -16,4 +16,28 @@ body {
   border: 2px;
   box-shadow: 1px 1px 5px;
   padding: 20px;
+   text-align: center;
+   align-items: center;
+
+}
+.mainContainer h1{
+  font-family: cursive;
+  letter-spacing: 1px;
+}
+
+
+.mainContainer input{
+  margin: 20px;
+  font-size: 15px;
+  padding: 5px;
+  padding: 8px;
+  
+}
+
+.mainContainer a{
+  color: white;
+  text-decoration: underline;
+}
+.mainContainer p{
+  margin: 8px;
 }

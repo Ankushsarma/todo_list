@@ -5,27 +5,63 @@
 </head>
 <body>
   <h1>Welcome <%= name %> 👋</h1>
+  <a href="/logout">Logout</a>
 
   <!-- Task Input Form -->
   <form action="/" method="POST">
     <input type="text" name="task" placeholder="Enter new task" required>
+    <input type="datetime-local" name="dueDate" required>
     <button type="submit">Add Task</button>
   </form>
 
-  <!-- Show All Tasks -->
+  <!-- Show Tasks -->
   <h2>Your Tasks</h2>
-<ul>
-  <% tasks.forEach(function(task) { %>
-    <li>
-      <a href="/marks_as_done/<%= task._id %>">mark as done</a>
-      <%= task.text %> 
-      <% if (task.completed) { %>
-        ✅
-      <% } %>
-      | <a href="/remove_task/<%= task._id %>">Remove task</a>
-    </li>
-  <% }) %>
-</ul>
+  <ul>
+    <% tasks.forEach(function(task) { %>
+      <li>
+        <a href="/marks_as_done/<%= task._id %>">mark as done</a>
+        <%= task.text %>
+        <% if (task.completed) { %> ✅ <% } %>
+        <% if (task.dueDate) { %> 
+          | Due: <%= task.dueDate.toLocaleString() %> 
+          | Time Left: <span class="time-left" data-duedate="<%= task.dueDate.toISOString() %>"></span>
+        <% } %>
+        | <a href="/remove_task/<%= task._id %>">Remove task</a>
+      </li>
+    <% }) %>
+  </ul>
 
+  <!-- Countdown Script -->
+  <script>
+  function updateTimeLeft() {
+      const spans = document.querySelectorAll('.time-left');
+
+      spans.forEach(span => {
+          const dueDate = new Date(span.dataset.duedate);
+          const now = new Date();
+          const diff = dueDate - now;
+
+          if (diff <= 0) {
+              span.textContent = "⏰ Overdue!";
+              span.style.color = "red";
+          } else {
+              const hours = Math.floor(diff / (1000 * 60 * 60));
+              const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+              const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+              span.textContent = `${hours}h ${minutes}m ${seconds}s`;
+
+              // Optional: color coding
+              if (diff < 3600 * 1000) { // less than 1 hour
+                  span.style.color = "orange";
+              } else {
+                  span.style.color = "green";
+              }
+          }
+      });
+  }
+
+  setInterval(updateTimeLeft, 1000);
+  updateTimeLeft();
+  </script>
 </body>
 </html>
