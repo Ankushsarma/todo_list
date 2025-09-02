@@ -2,69 +2,83 @@
 <html>
 <head>
   <title>My To-Do List</title>
+  <style>
+    .overdue { color: red; }
+    .soon { color: orange; }
+    .on-time { color: green; }
+    ul { list-style-type: none; padding-left: 0; }
+    li { margin: 5px 0; }
+  </style>
 </head>
 <body>
   <h1>Welcome <%= name %> 👋</h1>
-  <a href="/logout">Logout</a> 
-  <a href="/history">history</a>
+  <a href="/logout">Logout</a> |
+  <a href="/history">History</a> |
+
+  <!-- Filter Links -->
+  <strong>Filter: </strong>
+  <a href="/">None</a> |
+  <a href="/?filter=priority">Priority</a> |
+  <a href="/?filter=timeLeft">Time Left</a>
 
   <!-- Task Input Form -->
-  <form action="/" method="POST">
+  <form action="/" method="POST" style="margin-top:20px;">
     <input type="text" name="task" placeholder="Enter new task" required>
-    <input type="datetime-local" name="dueDate" required>
+    <input type="datetime-local" name="dueDate">
+    <select name="priority">
+      <option value="1">High</option>
+      <option value="2" selected>Medium</option>
+      <option value="3">Low</option>
+    </select>
     <button type="submit">Add Task</button>
   </form>
 
-  <!-- Show Tasks -->
+  <!-- Task List -->
   <h2>Your Tasks</h2>
-<ul>
-  <% tasks.forEach(function(task) { %>
-    <% if (!task.completed) { %> <!-- Only show incomplete tasks -->
+  <ul>
+    <% tasks.forEach(function(task){ %>
       <li>
-        <a href="/marks_as_done/<%= task._id %>">mark as done</a>
-        <%= task.text %>
-        <% if (task.dueDate) { %> 
-          | Due: <%= task.dueDate.toLocaleString() %> 
-          | Time Left: <span class="time-left" data-duedate="<%= task.dueDate.toISOString() %>"></span>
+        <% if(!task.completed){ %>
+          <a href="/marks_as_done/<%= task._id %>">Mark as done</a> |
         <% } %>
-        | <a href="/remove_task/<%= task._id %>">Remove task</a>
+        <%= task.text %>
+        <% if(task.dueDate){ %>
+          | Due: <%= new Date(task.dueDate).toLocaleString() %> 
+          | Time: <span class="time-left" data-duedate="<%= task.dueDate.toISOString() %>" data-completed="<%= task.completed %>"></span>
+        <% } %>
+        | <a href="/remove_task/<%= task._id %>">Remove</a>
+        <% if(task.completed){ %> ✅ <% } %>
       </li>
-    <% } %>
-  <% }) %>
-</ul>
+    <% }) %>
+  </ul>
 
-
- 
   <script>
-  function updateTimeLeft() {
+    function updateTimeLeft() {
       const spans = document.querySelectorAll('.time-left');
+      const now = new Date();
 
       spans.forEach(span => {
-          const dueDate = new Date(span.dataset.duedate);
-          const now = new Date();
-          const diff = dueDate - now;
+        const dueDate = new Date(span.dataset.duedate);
+        const completed = span.dataset.completed === "true";
+        const diff = completed ? 0 : (dueDate - now);
 
-          if (diff <= 0) {
-              span.textContent = "⏰ Overdue!";
-              span.style.color = "red";
-          } else {
-              const hours = Math.floor(diff / (1000 * 60 * 60));
-              const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-              const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-              span.textContent = `${hours}h ${minutes}m ${seconds}s`;
+        if(diff <= 0 && !completed) {
+          span.textContent = "⏰ Overdue!";
+          span.className = "overdue";
+        } else if(!completed){
+          const hours = Math.floor(diff / (1000*60*60));
+          const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
+          const seconds = Math.floor((diff % (1000*60)) / 1000);
+          span.textContent = `${hours}h ${minutes}m ${seconds}s`;
 
-              // Optional: color coding
-              if (diff < 3600 * 1000) { // less than 1 hour
-                  span.style.color = "orange";
-              } else {
-                  span.style.color = "green";
-              }
-          }
+          if(diff < 3600*1000) span.className = "soon";
+          else span.className = "on-time";
+        }
       });
-  }
+    }
 
-  setInterval(updateTimeLeft, 1000);
-  updateTimeLeft();
+    setInterval(updateTimeLeft, 1000);
+    updateTimeLeft();
   </script>
 </body>
 </html>

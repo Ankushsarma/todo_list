@@ -23,7 +23,8 @@ const taskSchema = new mongoose.Schema({
         {
             text: String,
             completed: { type: Boolean, default: false },
-            dueDate: { type: Date } 
+            dueDate: { type: Date } ,
+            date:{type:Date,default:Date.now}
         }
     ]
 });
@@ -87,15 +88,32 @@ app.get("/logout", (req, res) => {
 });
 
 // Home - show tasks
+// Home - show tasks with optional filter via query parameter
 app.get("/", async (req, res) => {
     const user = req.session.credentials;
     if (!user) return res.redirect("/login");
 
+    const filter = req.query.filter; // filter comes from URL like /?filter=priority
+
     try {
         const userTasks = await Task.findOne({ userId: user.userId });
+        let tasks = userTasks ? [...userTasks.task] : [];
+
+        const now = new Date();
+
+        if (!filter || filter === "none") {
+            tasks = tasks.filter(t => !t.completed); // pending
+        } else if (filter === "priority") {
+            tasks = tasks.filter(t => !t.completed).sort((a, b) => a.priority - b.priority);
+        } else if (filter === "timeLeft") {
+            tasks = tasks.filter(t => !t.completed && t.dueDate)
+                         .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+        }
+
         res.render("home", {
             name: user.name,
-            tasks: userTasks ? userTasks.task : []
+            tasks,
+            filter: filter || "none"
         });
     } catch (err) {
         console.error(err);
@@ -103,39 +121,48 @@ app.get("/", async (req, res) => {
     }
 });
 
+
+// Add task
 // Add task
 app.post("/", async (req, res) => {
-    const user = req.session.credentials;
-    if (!user) return res.redirect("/login");
+  const user = req.session.credentials;
+  if (!user) return res.redirect("/login");
 
-    try {
-        const { task, dueDate } = req.body;
+  try {
+    const { task, dueDate, priority } = req.body;
 
-        let userTasks = await Task.findOne({ userId: user.userId });
+    let userTasks = await Task.findOne({ userId: user.userId });
 
-        const newTaskObj = {
-            text: task,
-            completed: false,
-            dueDate: dueDate ? new Date(dueDate) : null
-        };
-
-        if (userTasks) {
-            userTasks.task.push(newTaskObj);
-            await userTasks.save();
-        } else {
-            const newTask = new Task({
-                userId: user.userId,
-                task: [newTaskObj]
-            });
-            await newTask.save();
-        }
-
-        res.redirect("/");
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error adding task");
+    // Check duplicate task name
+    if (userTasks && userTasks.task.some(t => t.text.toLowerCase() === task.toLowerCase())) {
+      return res.send("Task with same name already exists!");
     }
+
+    const newTaskObj = {
+      text: task,
+      completed: false,
+      dueDate: dueDate ? new Date(dueDate) : null,
+      priority: priority ? Number(priority) : 2
+    };
+
+    if (userTasks) {
+      userTasks.task.push(newTaskObj);
+      await userTasks.save();
+    } else {
+      const newTask = new Task({
+        userId: user.userId,
+        task: [newTaskObj]
+      });
+      await newTask.save();
+    }
+
+    res.redirect("/");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error adding task");
+  }
 });
+
 
 // Mark as done
 app.get("/marks_as_done/:taskId", async (req, res) => {
