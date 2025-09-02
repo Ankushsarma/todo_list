@@ -2,24 +2,34 @@
 <html>
 <head>
   <title>My To-Do List</title>
-  <style>
-    .overdue { color: red; }
-    .soon { color: orange; }
-    .on-time { color: green; }
-    ul { list-style-type: none; padding-left: 0; }
-    li { margin: 5px 0; }
-  </style>
+  <link rel="stylesheet" href="styles/home.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-  <h1>Welcome <%= name %> 👋</h1>
-  <a href="/logout">Logout</a> |
-  <a href="/history">History</a> |
+<nav>
+
+ 
+ <div class="navLink">
+  <a href="/">Home</a> 
+  <a href="/history">History</a>
+  <a href="/logout">Logout</a> 
+ </div>
+ 
+</nav>
+ 
+<div class="mainContainer container-fluid">
+
+  <div class="box">
+<h1 class="heading">Welcome <%= name %> </h1>
 
   <!-- Filter Links -->
-  <strong>Filter: </strong>
-  <a href="/">None</a> |
-  <a href="/?filter=priority">Priority</a> |
-  <a href="/?filter=timeLeft">Time Left</a>
+   <div class="filters">
+    <strong>Filter: </strong>
+    <a href="/">None</a> 
+    <a href="/?filter=priority">Priority</a> 
+    <a href="/?filter=timeLeft">Time Left</a>
+   </div>
+  
 
   <!-- Task Input Form -->
   <form action="/" method="POST" style="margin-top:20px;">
@@ -30,27 +40,31 @@
       <option value="2" selected>Medium</option>
       <option value="3">Low</option>
     </select>
-    <button type="submit">Add Task</button>
+    <button class="submitBtn" type="submit"><i class="fa-solid fa-plus"></i></button>
   </form>
-
+<hr>
   <!-- Task List -->
   <h2>Your Tasks</h2>
   <ul>
     <% tasks.forEach(function(task){ %>
       <li>
         <% if(!task.completed){ %>
-          <a href="/marks_as_done/<%= task._id %>">Mark as done</a> |
+          <a href="/marks_as_done/<%= task._id %>"><i class="fa-solid fa-check"></i></a> 
         <% } %>
         <%= task.text %>
         <% if(task.dueDate){ %>
-          | Due: <%= new Date(task.dueDate).toLocaleString() %> 
-          | Time: <span class="time-left" data-duedate="<%= task.dueDate.toISOString() %>" data-completed="<%= task.completed %>"></span>
+          | <i class="fa-solid fa-calendar"></i>: <%= new Date(task.dueDate).toLocaleString() %> 
+          | <i class="fa-solid fa-hourglass-end"></i>: <span class="time-left" data-duedate="<%= task.dueDate.toISOString() %>" data-completed="<%= task.completed %>"></span>
         <% } %>
-        | <a href="/remove_task/<%= task._id %>">Remove</a>
-        <% if(task.completed){ %> ✅ <% } %>
+        | <a href="/remove_task/<%= task._id %>"><i class="fa-solid fa-xmark"></i></a>
+        
       </li>
     <% }) %>
   </ul>
+
+  <hr>
+</div>
+</div>
 
   <script>
     function updateTimeLeft() {

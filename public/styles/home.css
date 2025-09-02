@@ -1,0 +1,77 @@
+body {
+  background-image: url("/bg4.jpg");
+  background-position: center;   
+  background-repeat: no-repeat;  
+  background-size: cover; 
+  height: 100vh;
+  color: white;
+}
+
+nav{
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.222);
+    padding: 10px;
+    border-bottom: 2px;
+    display: flex;
+    justify-content: center;
+}
+
+.navLink a,.filters a{
+    color: white;
+    font-size: 18px;
+    margin: 10px;
+}
+
+.mainContainer{
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box{
+     background-color:rgba(0, 0, 0, 0.222) ;
+    border-color: white;
+    border: 3px;
+    box-shadow: 1px 1px 5px black;
+    padding: 20px;
+    text-align: center;
+}
+
+.heading{
+     font-family: cursive;
+  letter-spacing: 1px;
+}
+
+.filters{
+    padding: 10px;
+    width: auto;
+}
+
+form{
+    background: #fff;
+    padding: 10px;
+}
+
+input{
+    background-color: #fff;
+    color: black;
+    margin: 0;
+    border: 0;
+    gap: 0;
+}
+select{
+     background-color: #fff;
+    color: black;
+    margin: 0 8px;
+    border: 0;
+    gap: 0;
+}
+
+.submitBtn{
+    border: 0;
+    border-radius: 50%;
+    background-color: wheat;
+    height: 40px;
+    width: 40px;
+}

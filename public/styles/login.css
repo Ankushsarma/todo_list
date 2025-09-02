@@ -1,5 +1,5 @@
 body {
-  background-image: url("/bg.jpg");
+  background-image: url("/bg4.jpg");
   background-position: center;   /* Center the image */
   background-repeat: no-repeat;  /* Prevent tiling */
   background-size: cover;        /* Make it cover the whole screen */
@@ -11,10 +11,10 @@ body {
 }
 
 .mainContainer{
-  background-color: rgba(255, 255, 255, 0.222);
+  background-color: rgba(0, 0, 0, 0.222);
   border-color: white;
   border: 2px;
-  box-shadow: 1px 1px 5px;
+  box-shadow: 1px 1px 5px black;
   padding: 20px;
    text-align: center;
    align-items: center;
