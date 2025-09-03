@@ -1,0 +1,139 @@
+/* Body & Background */
+body {
+  background-image: url("/bg4.jpg");
+  background-position: center;   
+  background-repeat: no-repeat;  
+  background-size: cover; 
+  background-attachment: fixed;  /* Fix background */
+  height: 100vh;
+  margin: 0;
+  color: rgb(255, 237, 237);
+  overflow-y: auto; /* Enable vertical scrolling */
+  text-align: center; /* Center all text */
+  font-family: Arial, sans-serif;
+}
+
+/* Navbar */
+nav {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.222);
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  position: sticky;  /* Keep navbar visible */
+  top: 0;
+  z-index: 10;
+  text-align: center;
+}
+
+.navLink a {
+  color: rgb(255, 237, 237);
+  font-size: 18px;
+  margin: 10px;
+  text-decoration: none;
+}
+
+/* Main container */
+.mainContainer {
+  min-height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 60px;
+  padding-bottom: 50px; /* Extra space for scrolling */
+}
+
+/* Box container */
+.box {
+  background-color: rgba(0, 0, 0, 0.222);
+  border: 3px solid white;
+  box-shadow: 1px 1px 5px black;
+  padding: 20px 40px;
+  border-radius: 15px;
+  width: 80%;
+  max-width: 900px;
+  text-align: center; /* Center all text in box */
+}
+
+/* Heading */
+.heading {
+  font-family: cursive;
+  letter-spacing: 1px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Task list */
+.taskList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Task container */
+.taskContainer {
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.378);
+  border-radius: 50px;
+  padding: 10px 20px;
+  margin: 10px 0;
+  background-color: transparent;
+  color: rgb(255, 237, 237);
+}
+
+/* Task text */
+.task {
+  flex: none; /* Prevent flex stretching */
+  text-align: center;
+  margin: 0 10px;
+}
+
+/* Done button */
+.donebtn a {
+  text-decoration: none;
+  color: wheat;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+/* Task status colors */
+.overdue {
+  color: rgb(244, 173, 173);
+}
+
+.soon {
+  color: rgb(251, 224, 174);
+}
+
+.on-time {
+  color: rgb(184, 252, 184);
+}
+
+/* Form inputs */
+input[type="text"],
+input[type="datetime-local"] {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid white;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  width: 80%;
+  text-align: center;
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}

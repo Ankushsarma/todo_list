@@ -6,93 +6,118 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-<nav>
 
- 
- <div class="navLink">
-  <a href="/">Home</a> 
-  <a href="/history">History</a>
-  <a href="/logout">Logout</a> 
- </div>
- 
-</nav>
- 
-<div class="mainContainer container-fluid">
+  <!-- Navbar -->
+  <nav>
+    <div class="navLink">
+      <a href="/">Home</a>
+      <a href="/history">History</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
 
-  <div class="box">
-<h1 class="heading">Welcome <%= name %> </h1>
+  <!-- Main Container -->
+  <div class="mainContainer container-fluid">
+    <div class="box">
 
-  <!-- Filter Links -->
-   <div class="filters">
-    <strong>Filter: </strong>
-    <a href="/">None</a> 
-    <a href="/?filter=priority">Priority</a> 
-    <a href="/?filter=timeLeft">Time Left</a>
-   </div>
+      <!-- Welcome Heading -->
+      <h1 class="heading">Welcome <%= name %> </h1>
+
+      <!-- Filters -->
+      <div class="filters">
+        <strong>Filter: </strong>
+        <a href="/">None</a>
+        <a href="/?filter=priority">Priority</a>
+        <a href="/?filter=timeLeft">Time Left</a>
+      </div>
+
+      <!-- Task Input Form -->
+       <h3>Add your Task</h3>
+      <form action="/" method="POST" style="margin-top:20px;">
+        <input type="text" name="task" placeholder="Enter new task" required>
+        <input type="datetime-local" name="dueDate">
+        <select name="priority">
+          <option value="2" selected>Select Priority</option>
+          <option value="1">High</option>
+          <option value="2" >Medium</option>
+          <option value="3">Low</option>
+        </select>
+        <button class="submitBtn" type="submit">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </form>
+
+      <hr>
+
+      <!-- Task List -->
+      <h2>Your Tasks</h2>
+      <div class="listContainer">
+
+      
+      <ul>
+        <% tasks.forEach(function(task){ %>
+          <div class="taskContainer">
+  <div class="donebtn">
+    <a href="/marks_as_done/<%= task._id %>">
+      <i class="fa-solid fa-check"></i>
+    </a>
+  </div>
+
+  <div class="task">
+    <strong><%= task.text %></strong><br>
+    <% if(task.dueDate){ %>
+      <span>
+        <i class="fa-solid fa-calendar"></i> <%= new Date(task.dueDate).toLocaleString() %>
+        | <i class="fa-solid fa-hourglass-end"></i>
+        <span class="time-left"
+              data-duedate="<%= task.dueDate.toISOString() %>"
+              data-completed="<%= task.completed %>"></span>
+      </span>
+    <% } %>
+  </div>
+
+  <div class="removebtn">
+    <a href="/remove_task/<%= task._id %>">
+      <i class="fa-solid fa-xmark"></i>
+    </a>
+  </div>
+</div>
+
+        <% }) %>
+      </ul>
+</div>
+      <hr>
+    </div>
+  </div>
+
+
   
+<script>
+function updateTimeLeft() {
+  const spans = document.querySelectorAll('.time-left');
+  const now = new Date();
 
-  <!-- Task Input Form -->
-  <form action="/" method="POST" style="margin-top:20px;">
-    <input type="text" name="task" placeholder="Enter new task" required>
-    <input type="datetime-local" name="dueDate">
-    <select name="priority">
-      <option value="1">High</option>
-      <option value="2" selected>Medium</option>
-      <option value="3">Low</option>
-    </select>
-    <button class="submitBtn" type="submit"><i class="fa-solid fa-plus"></i></button>
-  </form>
-<hr>
-  <!-- Task List -->
-  <h2>Your Tasks</h2>
-  <ul>
-    <% tasks.forEach(function(task){ %>
-      <li>
-        <% if(!task.completed){ %>
-          <a href="/marks_as_done/<%= task._id %>"><i class="fa-solid fa-check"></i></a> 
-        <% } %>
-        <%= task.text %>
-        <% if(task.dueDate){ %>
-          | <i class="fa-solid fa-calendar"></i>: <%= new Date(task.dueDate).toLocaleString() %> 
-          | <i class="fa-solid fa-hourglass-end"></i>: <span class="time-left" data-duedate="<%= task.dueDate.toISOString() %>" data-completed="<%= task.completed %>"></span>
-        <% } %>
-        | <a href="/remove_task/<%= task._id %>"><i class="fa-solid fa-xmark"></i></a>
-        
-      </li>
-    <% }) %>
-  </ul>
+  spans.forEach(span => {
+    const dueDate = new Date(span.dataset.duedate);
+    const completed = span.dataset.completed === "true";
+    const diff = completed ? 0 : (dueDate - now);
 
-  <hr>
-</div>
-</div>
-
-  <script>
-    function updateTimeLeft() {
-      const spans = document.querySelectorAll('.time-left');
-      const now = new Date();
-
-      spans.forEach(span => {
-        const dueDate = new Date(span.dataset.duedate);
-        const completed = span.dataset.completed === "true";
-        const diff = completed ? 0 : (dueDate - now);
-
-        if(diff <= 0 && !completed) {
-          span.textContent = "⏰ Overdue!";
-          span.className = "overdue";
-        } else if(!completed){
-          const hours = Math.floor(diff / (1000*60*60));
-          const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
-          const seconds = Math.floor((diff % (1000*60)) / 1000);
-          span.textContent = `${hours}h ${minutes}m ${seconds}s`;
-
-          if(diff < 3600*1000) span.className = "soon";
-          else span.className = "on-time";
-        }
-      });
+    if (diff <= 0 && !completed) {
+      span.textContent = "⏰ Overdue!";
+    } else if (!completed) {
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      span.textContent = `${hours}h ${minutes}m ${seconds}s`;
     }
+  });
+}
 
-    setInterval(updateTimeLeft, 1000);
-    updateTimeLeft();
-  </script>
+// Update every second
+setInterval(updateTimeLeft, 1000);
+updateTimeLeft();
+</script>
+
+
 </body>
 </html>

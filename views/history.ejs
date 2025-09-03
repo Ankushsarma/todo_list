@@ -1,89 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My To-Do List</title>
+  <title>Task History</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/styles/history.css">
 </head>
 <body>
-  <h1>Welcome <%= name %> 👋</h1>
-  <a href="/logout">Logout</a> 
-  <a href="/">Home</a>
 
-  <!-- Pending Tasks -->
-  <h2>Pending Tasks ⏳</h2>
-  <ul>
-    <% tasks.forEach(function(task) { %>
-      <% if (!task.completed && task.dueDate && new Date(task.dueDate) > new Date()) { %>
-        <li>
-          <a href="/marks_as_done/<%= task._id %>">Mark as done</a>
-          <%= task.text %> | Time Left: 
-          <span class="time-left" data-duedate="<%= task.dueDate.toISOString() %>"></span>
-          
-        </li>
-      <% } %>
-    <% }) %>
-  </ul>
+  <!-- Navbar -->
+  <nav>
+    <div class="navLink">
+      <a href="/">Home</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
 
-  <!-- Late Tasks -->
-  <h2>Late Tasks ⏰</h2>
-  <ul>
-    <% tasks.forEach(function(task) { %>
-      <% if (!task.completed && task.dueDate && new Date(task.dueDate) <= new Date()) { %>
-        <li>
-          <%= task.text %> | Late by: 
-          <span class="late-time" data-duedate="<%= task.dueDate.toISOString() %>"></span>
-          |
-        </li>
-      <% } %>
-    <% }) %>
-  </ul>
+  <!-- Main Container -->
+  <div class="mainContainer">
+    <div class="box">
+      <h1 class="heading">Welcome <%= name %> 👋</h1>
 
-  <!-- Completed Tasks -->
-  <h2>Completed Tasks ✅</h2>
-  <ul>
-    <% tasks.forEach(function(task) { %>
-      <% if (task.completed) { %>
-        <li>
-          <%= task.text %> | Task completed
-          |
-        </li>
-      <% } %>
-    <% }) %>
-  </ul>
+      <!-- Pending Tasks -->
+      <h2>⏳ Pending Tasks</h2>
+      <ul class="taskList">
+        <% tasks.forEach(function(task) { %>
+          <% if (!task.completed && task.dueDate && new Date(task.dueDate) > new Date()) { %>
+            <li class="taskContainer">
+              <div class="task">
+                <strong><%= task.text %></strong><br>
+                <i class="fa-solid fa-hourglass-half"></i>
+                <span class="time-left" data-duedate="<%= task.dueDate.toISOString() %>"></span>
+              </div>
+              <div class="donebtn">
+                <a href="/marks_as_done/<%= task._id %>"><i class="fa-solid fa-check"></i></a>
+              </div>
+            </li>
+          <% } %>
+        <% }) %>
+      </ul>
 
+      <!-- Late Tasks -->
+      <h2>⏰ Late Tasks</h2>
+      <ul class="taskList">
+        <% tasks.forEach(function(task) { %>
+          <% if (!task.completed && task.dueDate && new Date(task.dueDate) <= new Date()) { %>
+            <li class="taskContainer overdue">
+              <div class="task">
+                <strong><%= task.text %></strong><br>
+                <i class="fa-solid fa-clock"></i>
+                <span class="late-time" data-duedate="<%= task.dueDate.toISOString() %>"></span>
+              </div>
+            </li>
+          <% } %>
+        <% }) %>
+      </ul>
+
+      <!-- Completed Tasks -->
+      <h2>✅ Completed Tasks</h2>
+      <ul class="taskList">
+        <% tasks.forEach(function(task) { %>
+          <% if (task.completed) { %>
+            <li class="taskContainer on-time">
+              <div class="task">
+                <strong><%= task.text %></strong> <br>
+                <i class="fa-solid fa-circle-check"></i> Completed
+              </div>
+            </li>
+          <% } %>
+        <% }) %>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Countdown Script -->
   <script>
     function updateTimeLeft() {
       const pendingSpans = document.querySelectorAll('.time-left');
       const lateSpans = document.querySelectorAll('.late-time');
+      const now = new Date();
 
-      // Update pending time left
       pendingSpans.forEach(span => {
         const dueDate = new Date(span.dataset.duedate);
-        const now = new Date();
         const diff = dueDate - now;
 
         if (diff <= 0) {
           span.textContent = "Overdue!";
-          span.style.color = "red";
+          span.className = "overdue";
         } else {
-          const hours = Math.floor(diff / (1000 * 60 * 60));
-          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-          span.textContent = `${hours}h ${minutes}m ${seconds}s`;
-          span.style.color = "green";
+          const h = Math.floor(diff / (1000 * 60 * 60));
+          const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((diff % (1000 * 60)) / 1000);
+          span.textContent = `${h}h ${m}m ${s}s`;
+          span.className = diff < 3600 * 1000 ? "soon" : "on-time";
         }
       });
 
-      // Update late time
       lateSpans.forEach(span => {
         const dueDate = new Date(span.dataset.duedate);
-        const now = new Date();
-        const diff = now - dueDate; // How late
-
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        span.textContent = `${hours}h ${minutes}m ${seconds}s`;
-        span.style.color = "red";
+        const diff = now - dueDate;
+        const h = Math.floor(diff / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
+        span.textContent = `${h}h ${m}m ${s}s late`;
       });
     }
 
