@@ -2,13 +2,17 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const mongoose = require("mongoose");
+require('dotenv').config();
+const PORT = process.env.PORT || 3000;
+
+
 
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017/toDo_list")
+mongoose.connect(process.env.dburl)
     .then(() => console.log("Database connected"))
-    .catch(() => console.log("Database connection error"));
+    .catch((error) => console.log(error));
 
 // Schemas
 const userSchema = new mongoose.Schema({
@@ -217,6 +221,6 @@ app.get("/history",async(req,res)=>{
 })
 
 // Start server
-app.listen(3000, () => {
-    console.log("Server running on port 3000");
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
