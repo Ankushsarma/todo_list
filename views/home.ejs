@@ -95,10 +95,10 @@
 <script>
 function updateTimeLeft() {
   const spans = document.querySelectorAll('.time-left');
-  const now = new Date();
+  const now = Date.now();
 
   spans.forEach(span => {
-    const dueDate = new Date(span.dataset.duedate);
+    const dueDate = new Date(span.dataset.duedate).getTime();
     const completed = span.dataset.completed === "true";
     const diff = completed ? 0 : (dueDate - now);
 
@@ -113,9 +113,9 @@ function updateTimeLeft() {
   });
 }
 
-
 setInterval(updateTimeLeft, 1000);
 updateTimeLeft();
+
 </script>
 
 
