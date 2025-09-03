@@ -4,12 +4,12 @@ body {
   background-position: center;   
   background-repeat: no-repeat;  
   background-size: cover; 
-  background-attachment: fixed;  /* Fix background */
+  background-attachment: fixed;  
   height: 100vh;
   margin: 0;
   color: rgb(255, 237, 237);
-  overflow-y: auto; /* Enable vertical scrolling */
-  text-align: center; /* Center all text */
+  overflow-y: auto; 
+  text-align: center;
   font-family: Arial, sans-serif;
 }
 
@@ -20,7 +20,7 @@ nav {
   padding: 10px;
   display: flex;
   justify-content: center;
-  position: sticky;  /* Keep navbar visible */
+  position: sticky;  
   top: 0;
   z-index: 10;
   text-align: center;
@@ -40,7 +40,7 @@ nav {
   justify-content: center;
   align-items: flex-start;
   margin-top: 60px;
-  padding-bottom: 50px; /* Extra space for scrolling */
+  padding-bottom: 50px; 
 }
 
 /* Box container */
@@ -52,7 +52,7 @@ nav {
   border-radius: 15px;
   width: 80%;
   max-width: 900px;
-  text-align: center; /* Center all text in box */
+  text-align: center; 
 }
 
 /* Heading */
@@ -73,7 +73,7 @@ nav {
 /* Task container */
 .taskContainer {
   display: flex;
-  justify-content: center; /* Center content horizontally */
+  justify-content: center; 
   align-items: center;
   border: 1px solid rgba(0, 0, 0, 0.378);
   border-radius: 50px;
@@ -85,7 +85,7 @@ nav {
 
 /* Task text */
 .task {
-  flex: none; /* Prevent flex stretching */
+  flex: none; 
   text-align: center;
   margin: 0 10px;
 }

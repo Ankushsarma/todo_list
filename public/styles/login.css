@@ -1,8 +1,8 @@
 body {
   background-image: url("/bg4.jpg");
-  background-position: center;   /* Center the image */
-  background-repeat: no-repeat;  /* Prevent tiling */
-  background-size: cover;        /* Make it cover the whole screen */
+  background-position: center;   
+  background-repeat: no-repeat;  
+  background-size: cover;        
   display: flex;
   justify-content: center;
   align-items: center;

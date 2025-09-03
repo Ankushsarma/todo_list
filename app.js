@@ -87,13 +87,12 @@ app.get("/logout", (req, res) => {
     res.redirect("/login");
 });
 
-// Home - show tasks
-// Home - show tasks with optional filter via query parameter
+// Home
 app.get("/", async (req, res) => {
     const user = req.session.credentials;
     if (!user) return res.redirect("/login");
 
-    const filter = req.query.filter; // filter comes from URL like /?filter=priority
+    const filter = req.query.filter; 
 
     try {
         const userTasks = await Task.findOne({ userId: user.userId });
@@ -102,7 +101,7 @@ app.get("/", async (req, res) => {
         const now = new Date();
 
         if (!filter || filter === "none") {
-            tasks = tasks.filter(t => !t.completed); // pending
+            tasks = tasks.filter(t => !t.completed); 
         } else if (filter === "priority") {
             tasks = tasks.filter(t => !t.completed).sort((a, b) => a.priority - b.priority);
         } else if (filter === "timeLeft") {
@@ -122,7 +121,6 @@ app.get("/", async (req, res) => {
 });
 
 
-// Add task
 // Add task
 app.post("/", async (req, res) => {
   const user = req.session.credentials;

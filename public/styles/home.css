@@ -3,7 +3,7 @@ body {
   background-position: center;   
   background-repeat: no-repeat;  
   background-size: cover; 
-  color: rgb(255, 237, 237); /* ✅ changed */
+  color: rgb(255, 237, 237); 
 }
 
 
@@ -78,13 +78,13 @@ select{
     width: 40px;
 }
 .listContainer {
-  max-height: calc(4 * 90px); /* show only 4 tasks (90px each, adjust if needed) */
-  overflow-y: auto;           /* vertical scroll */
-  overflow-x: hidden;         /* disable horizontal scroll */
-  scrollbar-width: none;      /* Firefox hide scrollbar */
+  max-height: calc(4 * 90px); 
+  overflow-y: auto;           
+  overflow-x: hidden;         
+  scrollbar-width: none;      
 }
 
-/* Hide scrollbar in Chrome, Edge, Safari */
+/* Hide scrollbar  */
 .listContainer::-webkit-scrollbar {
   display: none;
 }
@@ -96,21 +96,21 @@ select{
   align-items: center;
   justify-content: space-between;
   border: 1px solid rgba(0, 0, 0, 0.378);
-  border-radius: 50px;   /* pill shape */
+  border-radius: 50px;   
   padding: 10px 20px;
   margin: 10px 0;
-  background-color: transparent; /* transparent background */
+  background-color: transparent; 
   color: rgb(255, 237, 237);
  
 }
 
 .task {
   text-align: center;
-  flex: 1;  /* keeps task centered between icons */
-  color: rgb(255, 237, 237); /* match color with other text */
+  flex: 1;  
+  color: rgb(255, 237, 237); 
 }
 .task strong {
-  font-size: 20px;  /* increase only task name size */
+  font-size: 20px;  
   color: rgb(255, 237, 237);
 }
 
@@ -128,7 +128,7 @@ select{
 }
 
 .taskContainer .time-left {
-  font-size: 14px;  /* keep original size */
-  color: rgb(255, 237, 237); /* match other text */
+  font-size: 14px; 
+  color: rgb(255, 237, 237); 
 }
 
